@@ -1,0 +1,29 @@
+<?php 
+
+namespace App\Database;
+
+use mysqli;
+
+class Database {
+    private static $host = "localhost";
+    private static $user = "root";
+    private static $pass = "1234";
+    private static $db = "user_list_app";
+
+    public static function getConnection() {
+        $conn = new mysqli(
+            self::$host,
+            self::$user,
+            self::$pass,
+            self::$db,
+        );
+
+        if ($conn -> connect_error) {
+            die("Database connection failed: " . $conn -> connect_error);
+        }
+
+        return $conn;
+    }
+}
+
+?>
