@@ -6,13 +6,44 @@ use App\Models\Candidate;
 
 class CandidateManager {
     private $conn;
+    private $lastError;
 
-    // DI
+    // Dependency Injection
     public function __construct($dbConnection) {
         $this -> conn = $dbConnection;
+        $this->lastError = null;
+    }
+
+    public function getLastError() {
+        return $this->lastError;
+    }
+
+    private function setLastError($error) {
+        $this->lastError = $error;
+    }
+
+    private function emailExists($email, $excludeId = null) {
+        $query = "SELECT id FROM users WHERE email = ?";
+        $params = [$email];
+        $types = "s";
+        if ($excludeId !== null) {
+            $query .= " AND id != ?";
+            $params[] = $excludeId;
+            $types .= "i";
+        }
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
     }
 
     public function add(Candidate $candidate) {
+        if ($this->emailExists($candidate->email)) {
+            $this->setLastError('Email already exists');
+            return false;
+        }
+
         $stmt = $this -> conn -> prepare (
             "INSERT INTO users (name, email, age, gender) VALUES (?, ?, ?, ?)"
         );
@@ -25,7 +56,11 @@ class CandidateManager {
             $candidate -> gender,
         );
 
-        return $stmt -> execute();
+        $result = $stmt -> execute();
+        if (!$result) {
+            $this->setLastError('Failed to add user');
+        }
+        return $result;
     }
 
 
@@ -38,6 +73,11 @@ class CandidateManager {
     }
 
     public function update($id, Candidate $candidate) {
+        if ($this->emailExists($candidate->email, $id)) {
+            $this->setLastError('Email already exists');
+            return false;
+        }
+
         $stmt = $this -> conn -> prepare(
             "UPDATE users SET name = ?, email = ?, age = ?, gender = ? WHERE id = ?"
         );
@@ -51,7 +91,11 @@ class CandidateManager {
             $id
         );
 
-        return $stmt -> execute();
+        $result = $stmt -> execute();
+        if (!$result) {
+            $this->setLastError('Failed to update user');
+        }
+        return $result;
     }
 
     public function getAll() {

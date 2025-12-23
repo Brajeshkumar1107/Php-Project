@@ -11,24 +11,27 @@
         <h1>User List Management</h1>
     </header>
     <div class="container">
+        <!-- User Form -->
         <form id="userForm" onsubmit="return submitForm()">
             <h3>User Information</h3>
             <input type="hidden" name="id" id="userId">
             <label for="name">Name:</label>
-            <input name="name" id="name" placeholder="Name" required>
+            <input name="name" id="name" placeholder="Name" maxlength="100" required>
             <label for="email">Email:</label>
             <input name="email" id="email" type="email" placeholder="Email" required>
             <label for="age">Age:</label>
-            <input name="age" id="age" type="number" placeholder="Age" required>
+            <input name="age" id="age" type="number" placeholder="Age" min="0" max="120" required>
             <label for="gender">Gender:</label>
             <select name="gender" id="gender" required>
+                <option value="" selected>Choose an option </option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
             </select>
-            <button type="submit">Submit</button>
+            <button type="submit" id="submitBtn">Submit</button>
         </form>
 
+        <!-- User List -->
         <div class="user-list">
             <h3>User List</h3>
             <div id="userList"></div>
@@ -36,6 +39,8 @@
 
     </div>
 
+    <!-- Toast Message -->
+    <div id="toast" class="toast"></div>
     
     <script src="assets/js/script.js"></script>
 </body>
