@@ -12,16 +12,25 @@ function showToast(message, isError = false) {
 }
 
 function validateForm() {
+
+    const formData = document.querySelector("#userForm").value;
+    const nameInput = document.getElementById("name");
+    const ageInput = document.getElementById("age");
+    const emailInput = document.getElementById("email");
+
     const name = document.getElementById("name").value.trim();
     const age = document.getElementById("age").value;
-    const email = document.getElementById("email").value.trim();
+    const email = document.querySelector("#email").value.trim();
     const gender = document.getElementById("gender").value;
     const submitBtn = document.getElementById("submitBtn");
+    console.log("email", email);
+    console.log("form", formData);
 
     let isValid = true;
 
     if (name === "" || name.length > 100) {
         isValid = false;
+        nameInput.classList.add("input-invalid");
     }
 
     if (isNaN(age) || age < 0 || age > 120 || age === "") {
@@ -38,6 +47,8 @@ function validateForm() {
     }
 
     submitBtn.disabled = !isValid;
+    
+    nameInput.classList.remove("input-invalid");
     return isValid;
 }
 

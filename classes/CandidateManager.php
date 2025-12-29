@@ -23,7 +23,7 @@ class CandidateManager {
     }
 
     private function emailExists($email, $excludeId = null) {
-        $query = "SELECT id FROM users WHERE email = ?";
+        $query = "SELECT id FROM users WHERE email = ? limit 100000";
         $params = [$email];
         $types = "s";
         if ($excludeId !== null) {
@@ -38,7 +38,7 @@ class CandidateManager {
         return $result->num_rows > 0;
     }
 
-    public function add(Candidate $candidate) {
+    public function  add(Candidate $candidate) {
         if ($this->emailExists($candidate->email)) {
             $this->setLastError('Email already exists');
             return false;
@@ -55,6 +55,8 @@ class CandidateManager {
             $candidate -> age,
             $candidate -> gender,
         );
+
+        // print_r($candidate);
 
         $result = $stmt -> execute();
         if (!$result) {

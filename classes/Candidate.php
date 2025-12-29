@@ -10,8 +10,8 @@ class Candidate {
 
     public function __construct($name, $email, $age, $gender) {
         $this -> name = $name;
-        $this -> email = $email;
-        $this -> age = $age;
+        $this -> email = $email;   
+        $this -> age = $age;     
         $this -> gender = $gender;
     }
 }

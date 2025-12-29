@@ -19,7 +19,6 @@ $gender = $_POST['gender'];
 
 checkValidation($name, $email, $age, $gender);
 
-
 $candidate = new Candidate(
     $name,
     $email,
